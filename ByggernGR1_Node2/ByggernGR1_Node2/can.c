@@ -25,10 +25,17 @@ void can_init(){
 	mcp_bitModify(MCP_CANCTRL, MODE_MASK ,MODE_NORMAL);
 	
 	canStat = mcp_read(MCP_CANSTAT);
-	if((canStat &MODE_MASK) == MODE_NORMAL){
-		printf("Is in loopback mode - %i\n",canStat);
+	switch (canStat & MODE_MASK){
+		case MODE_NORMAL:
+			printf("\nCAN is in Normal Mode.\n");
+			break;
+		case MODE_LOOPBACK:
+			printf("\nCAN is in Loopback Mode.\n");
+			break;
+		case MODE_CONFIG:
+			printf("\nCAN is in Config Mode.\n");
+			break;
 	}
-	
 }
 
 

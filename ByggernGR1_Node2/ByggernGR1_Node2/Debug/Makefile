@@ -40,8 +40,10 @@ C_SRCS +=  \
 ../can.c \
 ../main.c \
 ../mcp.c \
+../servo.c \
 ../spi.c \
-../uart.c
+../uart.c \
+../utilities.c
 
 
 PREPROCESSING_SRCS += 
@@ -54,29 +56,37 @@ OBJS +=  \
 can.o \
 main.o \
 mcp.o \
+servo.o \
 spi.o \
-uart.o
+uart.o \
+utilities.o
 
 OBJS_AS_ARGS +=  \
 can.o \
 main.o \
 mcp.o \
+servo.o \
 spi.o \
-uart.o
+uart.o \
+utilities.o
 
 C_DEPS +=  \
 can.d \
 main.d \
 mcp.d \
+servo.d \
 spi.d \
-uart.d
+uart.d \
+utilities.d
 
 C_DEPS_AS_ARGS +=  \
 can.d \
 main.d \
 mcp.d \
+servo.d \
 spi.d \
-uart.d
+uart.d \
+utilities.d
 
 OUTPUT_FILE_PATH +=ByggernGR1_Node2.elf
 
@@ -92,6 +102,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

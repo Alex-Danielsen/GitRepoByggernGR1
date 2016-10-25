@@ -37,7 +37,7 @@ void spi_transmit(char data){
 	
 }
 
-char spi_read() {
+char spi_read(){
 	return SPDR;
 }
 

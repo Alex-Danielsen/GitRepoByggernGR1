@@ -17,7 +17,7 @@
 typedef struct {
 	uint16_t id; //Only support 8 bit addresses 
 	uint8_t length; //Only 4 least significant bits used
-	char data[8];
+	uint8_t data[8];
 } can_message;
 
 //---FUNCTIONS---
