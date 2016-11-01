@@ -37,11 +37,16 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../adc.c \
 ../can.c \
+../ir.c \
 ../main.c \
 ../mcp.c \
+../motor.c \
 ../servo.c \
+../solenoid.c \
 ../spi.c \
+../TWI_Master.c \
 ../uart.c \
 ../utilities.c
 
@@ -53,38 +58,58 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+adc.o \
 can.o \
+ir.o \
 main.o \
 mcp.o \
+motor.o \
 servo.o \
+solenoid.o \
 spi.o \
+TWI_Master.o \
 uart.o \
 utilities.o
 
 OBJS_AS_ARGS +=  \
+adc.o \
 can.o \
+ir.o \
 main.o \
 mcp.o \
+motor.o \
 servo.o \
+solenoid.o \
 spi.o \
+TWI_Master.o \
 uart.o \
 utilities.o
 
 C_DEPS +=  \
+adc.d \
 can.d \
+ir.d \
 main.d \
 mcp.d \
+motor.d \
 servo.d \
+solenoid.d \
 spi.d \
+TWI_Master.d \
 uart.d \
 utilities.d
 
 C_DEPS_AS_ARGS +=  \
+adc.d \
 can.d \
+ir.d \
 main.d \
 mcp.d \
+motor.d \
 servo.d \
+solenoid.d \
 spi.d \
+TWI_Master.d \
 uart.d \
 utilities.d
 
@@ -102,6 +127,16 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
+
+
+
+
 
 
 

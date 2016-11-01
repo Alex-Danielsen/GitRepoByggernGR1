@@ -15,6 +15,9 @@
 #include "spi.h"
 #include "servo.h"
 #include "utilities.h"
+#include "adc.h"
+#include "TWI_Master.h"
+#include "motor.h"
 
 #define F_CPU 16000000
 #define BAUD 9600
@@ -33,6 +36,8 @@ int main(void){
 	UART_parsePrint();
 	can_init();
 	servo_init();
+	adc_init();
+	motor_init();
 	
 	
 	/*  BEGIN INITIALIZATION OF INTERRUPTS */
@@ -57,7 +62,10 @@ int main(void){
 	
 	//END CAN TEST.
 	
-	
+	motor_setDir(LEFT);
+	motor_setSpeed(0);
     while(1){
+		printf("\nEncoder value: %d\n", motor_getEncoder());
+		_delay_ms(100);
     }
 }
