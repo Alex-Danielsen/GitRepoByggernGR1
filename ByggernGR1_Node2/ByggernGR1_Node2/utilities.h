@@ -10,6 +10,7 @@
 #define UTILITIES_H_
 
 uint16_t utilities_joyToServo(uint8_t joyVal);
+int16_t utilities_joyToMotor(uint8_t joyVal);
 
 
 

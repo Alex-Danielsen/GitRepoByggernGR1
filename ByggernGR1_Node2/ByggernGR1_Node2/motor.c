@@ -35,6 +35,7 @@ void motor_reset(){
 	_delay_ms(25); //Wait for motor to reset.
 	//Set PINH5 bit in PORTH reg to clear RST signal.
 	PORTH |= (1 << PINH6);
+	printf("Encoder Reset\n");
 }
 
 
@@ -45,12 +46,13 @@ int16_t motor_getEncoder(){
 	PORTH &= ~(1 << DDH5);
 	//Set SEL low to get high byte:
 	PORTH &= ~(1 << DDH3);
-	_delay_us(20);
+	_delay_ms(20);
 	encoderVal = PINK << 8; //Read high byte.
 	//Set SEL high to get low byte:
 	PORTH |= (1 << DDH3);
-	_delay_us(20);
+	_delay_ms(20);
 	encoderVal += PINK; //Read low byte.
+	
 	//Set OE high to disable encoder output:
 	PORTH |= (1 << DDH5);
 	
@@ -84,4 +86,46 @@ void motor_setSpeed(char speed){
 	TWI_Start_Transceiver_With_Data(twiMsg,3);
 	
 	
+}
+
+
+/*
+*
+* inVal - Assumed to be between -255 and 255
+*/
+void motor_joyControl(int16_t inVal) {
+	
+	if(inVal < -10) {
+		motor_setDir(RIGHT);
+		motor_setSpeed(-1*inVal);
+	}
+	else if(inVal > 10) {
+		motor_setDir(LEFT);
+		motor_setSpeed(inVal);		
+	}
+	else {
+		motor_setSpeed(0);
+	}
+	
+}
+
+//Drive motor left until the encoder values stop changing
+void motor_calibrate() {
+	motor_setDir(RIGHT);
+	int16_t prevEnc = 3000;
+	int16_t Enc = 0;
+	motor_setSpeed(90);
+	while(prevEnc != motor_getEncoder()) {
+		printf("Driving left!\n");
+		Enc = motor_getEncoder();
+		_delay_ms(100);
+		prevEnc = Enc;
+	}
+	motor_setSpeed(0);
+	printf("Stop Motor!\n");
+	
+	_delay_ms(3000);
+	
+	//Reset the motor:
+	motor_reset();
 }

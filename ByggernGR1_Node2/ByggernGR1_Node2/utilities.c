@@ -22,3 +22,24 @@ uint16_t utilities_joyToServo(uint8_t joyVal) {
 	
 	return (uint16_t)newVal;
 }
+
+int16_t utilities_joyToMotor(uint8_t joyVal) {
+	//switch to math without integers
+	double newVal = (double)joyVal;
+	
+	//Go from 0-1 -> 0-(HIGH_VAL-LOW_VAL)
+	newVal *= 2;
+	
+	//Go from 0-(HIGH_VAL-LOW_VAL) -> LOW_VAL-HIGH_VAL
+	newVal -= 255;
+	
+	//Clamp end values
+	if(newVal < -255) {
+		newVal = -255;
+	}
+	else if(newVal > 255) {
+		newVal = 255;
+	}
+	
+	return (int16_t)newVal;
+}
