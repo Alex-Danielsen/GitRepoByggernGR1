@@ -6,10 +6,14 @@
  */ 
 
 #include <avr/io.h>
+#define F_CPU 16000000
+
 #include <avr/delay.h>
 
 #include "TWI_master.h"
 #include "motor.h"
+
+uint8_t joySetPoint = 130;
 
 void motor_init(){
 	TWI_Master_Initialise();
@@ -40,7 +44,7 @@ void motor_reset(){
 
 
 int16_t motor_getEncoder(){
-	int16_t encoderVal;
+	volatile int16_t encoderVal;
 	
 	//Set OE low to enable encoder output:
 	PORTH &= ~(1 << DDH5);
@@ -48,10 +52,13 @@ int16_t motor_getEncoder(){
 	PORTH &= ~(1 << DDH3);
 	_delay_ms(20);
 	encoderVal = PINK << 8; //Read high byte.
+	
+	//printf("high: %d, ", PINK);
 	//Set SEL high to get low byte:
 	PORTH |= (1 << DDH3);
 	_delay_ms(20);
 	encoderVal += PINK; //Read low byte.
+	//printf("low: %d\n", PINK);
 	
 	//Set OE high to disable encoder output:
 	PORTH |= (1 << DDH5);
@@ -93,36 +100,73 @@ void motor_setSpeed(char speed){
 *
 * inVal - Assumed to be between -255 and 255
 */
-// void motor_joyControl(int16_t inVal) {
-// 	
-// 	if(inVal < -10) {
-// 		motor_setDir(RIGHT);
-// 		motor_setSpeed((char)(abs(inVal)));
-// 	}
-// 	else if(inVal > 10) {
-// 		motor_setDir(LEFT);
-// 		motor_setSpeed((char)inVal);		
-// 	}
-// 	else {
-// 		motor_setSpeed(0);
-// 	}
-// 	
-// }
-
-void motor_joyControl(uint8_t rawJoyVal) {
-	if(rawJoyVal < 123) {
+void motor_joyControl(int16_t inVal) {
+	
+	if(inVal < -10) {
 		motor_setDir(RIGHT);
-		motor_setSpeed(rawJoyVal*2);
+		motor_setSpeed((char)(abs(inVal)));
 	}
-	else if (rawJoyVal > 133) {
+	else if(inVal > 10) {
 		motor_setDir(LEFT);
-		motor_setSpeed((rawJoyVal-133)*2);
+		motor_setSpeed((char)inVal);		
 	}
 	else {
 		motor_setSpeed(0);
 	}
 	
 }
+
+void motor_setSetpoint(uint8_t joyVal) {
+	joySetPoint = joyVal;
+}
+
+void motor_joyPositionControl() {
+	float desiredEnc = (float)joySetPoint * (9000.0 / 255.0);
+	float pK = .01;
+	
+	int16_t error = (int16_t)desiredEnc - motor_getEncoder();
+	
+	
+	uint16_t speed = (uint16_t)(abs((float)error*pK));
+	if(speed > 150) {
+		speed = 150;
+	}
+	else if(speed < 60) {
+		speed = 60;
+	}
+	
+	printf("\nError: %d Speed: %d \n", error, speed);
+	
+	//positive error is left driving
+	if(error > 200) {
+		motor_setDir(LEFT);
+		motor_setSpeed((uint8_t)speed);
+	}
+	else if (error < -200) {
+		motor_setDir(RIGHT);
+		motor_setSpeed((uint8_t)speed);
+	}
+	else {
+		motor_setSpeed(0);
+	}
+	
+	
+ }
+
+// void motor_joyControl(uint8_t rawJoyVal) {
+// 	if(rawJoyVal < 123) {
+// 		motor_setDir(RIGHT);
+// 		motor_setSpeed(rawJoyVal*2);
+// 	}
+// 	else if (rawJoyVal > 133) {
+// 		motor_setDir(LEFT);
+// 		motor_setSpeed((rawJoyVal-133)*2);
+// 	}
+// 	else {
+// 		motor_setSpeed(0);
+// 	}
+// 	
+// }
 
 //Drive motor left until the encoder values stop changing
 void motor_calibrate() {
@@ -131,7 +175,7 @@ void motor_calibrate() {
 	int16_t Enc = 0;
 	motor_setSpeed(90);
 	while(prevEnc != motor_getEncoder()) {
-		printf("Driving left!\n");
+		printf("Driving right!\n");
 		Enc = motor_getEncoder();
 		_delay_ms(100);
 		prevEnc = Enc;

@@ -29,10 +29,13 @@ ISR(INT4_vect){
 	volatile can_message recMessage = can_recieve();
 	//printf("X: %d\n Y: %d \n",(recMessage.data[0]), (recMessage.data[1]));
 	servo_set(utilities_joyToServo(recMessage.data[0]));
-	motor_joyControl(recMessage.data[1]);
+	motor_setSetpoint(recMessage.data[1]);
+	//motor_joyControl(recMessage.data[1]);
 	
 	
 	//motor_joyControl(utilities_joyToMotor(recMessage.data[1]));
+	
+	//motor_joyPositionControl(recMessage.data[1]);
 	
 // 	int16_t val = utilities_joyToMotor(recMessage.data[1]);
 // 	
@@ -61,7 +64,7 @@ int main(void){
 	/*  END INITIALIZATION OF INTERRUPTS */
 	 printf("Init Complete");
 	
-	//motor_calibrate();
+	motor_calibrate();
 	
 	
 	//BEGIN CAN TEST:
@@ -93,7 +96,8 @@ int main(void){
 // 		_delay_ms(2500);
 		printf("\nIR value: %d\n", adc_read());
 		printf("\nEncoder value: %d\n", motor_getEncoder());
-		_delay_ms(100);
+		motor_joyPositionControl();
+		_delay_ms(1);
 		//can_send(newMessage);
     }
 }

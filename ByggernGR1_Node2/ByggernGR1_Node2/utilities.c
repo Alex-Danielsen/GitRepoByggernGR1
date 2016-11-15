@@ -34,11 +34,11 @@ int16_t utilities_joyToMotor(uint8_t joyVal) {
 	newVal -= 255;
 	
 	//Clamp end values
-	if(newVal < -255) {
-		newVal = -255;
+	if(newVal < -200) {
+		newVal = -200;
 	}
-	else if(newVal > 255) {
-		newVal = 255;
+	else if(newVal > 200) {
+		newVal = 200;
 	}
 	
 	return (int16_t)newVal;
