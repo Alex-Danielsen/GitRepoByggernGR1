@@ -93,15 +93,30 @@ void motor_setSpeed(char speed){
 *
 * inVal - Assumed to be between -255 and 255
 */
-void motor_joyControl(int16_t inVal) {
-	
-	if(inVal < -10) {
+// void motor_joyControl(int16_t inVal) {
+// 	
+// 	if(inVal < -10) {
+// 		motor_setDir(RIGHT);
+// 		motor_setSpeed((char)(abs(inVal)));
+// 	}
+// 	else if(inVal > 10) {
+// 		motor_setDir(LEFT);
+// 		motor_setSpeed((char)inVal);		
+// 	}
+// 	else {
+// 		motor_setSpeed(0);
+// 	}
+// 	
+// }
+
+void motor_joyControl(uint8_t rawJoyVal) {
+	if(rawJoyVal < 123) {
 		motor_setDir(RIGHT);
-		motor_setSpeed(-1*inVal);
+		motor_setSpeed(rawJoyVal*2);
 	}
-	else if(inVal > 10) {
+	else if (rawJoyVal > 133) {
 		motor_setDir(LEFT);
-		motor_setSpeed(inVal);		
+		motor_setSpeed((rawJoyVal-133)*2);
 	}
 	else {
 		motor_setSpeed(0);
@@ -126,6 +141,6 @@ void motor_calibrate() {
 	
 	_delay_ms(3000);
 	
-	//Reset the motor:
+	//Reset the encoder:
 	motor_reset();
 }

@@ -19,7 +19,7 @@ void motor_reset();
 int16_t motor_getEncoder();
 void motor_setDir(motorDir_t dir);
 void motor_setSpeed(char speed);
-void motor_joyControl(int16_t rawJoyVal);
+void motor_joyControl(uint8_t rawJoyVal);
 void motor_calibrate();
 
 

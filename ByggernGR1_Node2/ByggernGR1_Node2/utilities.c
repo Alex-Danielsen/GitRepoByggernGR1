@@ -27,10 +27,10 @@ int16_t utilities_joyToMotor(uint8_t joyVal) {
 	//switch to math without integers
 	double newVal = (double)joyVal;
 	
-	//Go from 0-1 -> 0-(HIGH_VAL-LOW_VAL)
+	//Go from 0-255 -> 0-510
 	newVal *= 2;
 	
-	//Go from 0-(HIGH_VAL-LOW_VAL) -> LOW_VAL-HIGH_VAL
+	//Go from 0-510 -> -255-255
 	newVal -= 255;
 	
 	//Clamp end values

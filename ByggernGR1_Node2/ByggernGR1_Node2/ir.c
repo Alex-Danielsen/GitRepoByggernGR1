@@ -11,6 +11,4 @@
 
 void ir_init() {
 	PORTF |= (1 << PINF0);
-	
-	
 }

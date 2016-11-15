@@ -25,11 +25,20 @@
 
 //Interrupt service routine for MCP
 ISR(INT4_vect){
-	printf("\nInterrupt occurred...");
+	//printf("\nInterrupt occurred...");
 	volatile can_message recMessage = can_recieve();
-	printf("X: %d\n Y: %d \n",(recMessage.data[0]), (recMessage.data[1]));
+	//printf("X: %d\n Y: %d \n",(recMessage.data[0]), (recMessage.data[1]));
 	servo_set(utilities_joyToServo(recMessage.data[0]));
-	motor_joyControl(utilities_joyToMotor(recMessage.data[1]));
+	motor_joyControl(recMessage.data[1]);
+	
+	
+	//motor_joyControl(utilities_joyToMotor(recMessage.data[1]));
+	
+// 	int16_t val = utilities_joyToMotor(recMessage.data[1]);
+// 	
+// 	printf("\nValue: %d \n", val);
+	
+	
 }
  
 int main(void){	
@@ -74,16 +83,17 @@ int main(void){
 		
 		
 		
-		//motor_setDir(LEFT);
-		//motor_setSpeed(100);
-		//_delay_ms(2500);
-		//printf("\nEncoder value: %d\n", motor_getEncoder());
-		//
-		//motor_setDir(RIGHT);
-		//motor_setSpeed(100);
-		//_delay_ms(2500);
+// 		motor_setDir(LEFT);
+// 		motor_setSpeed(100);
+// 		_delay_ms(2500);
+// 		//printf("\nEncoder value: %d\n", motor_getEncoder());
+// 		
+// 		motor_setDir(RIGHT);
+// 		motor_setSpeed(100);
+// 		_delay_ms(2500);
 		printf("\nIR value: %d\n", adc_read());
 		printf("\nEncoder value: %d\n", motor_getEncoder());
 		_delay_ms(100);
+		//can_send(newMessage);
     }
 }
